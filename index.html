@@ -71,13 +71,19 @@
                     
                     <div class="settings-section">
                         <div class="setting-group">
-                            <label for="intensitySlider">Intensity:</label>
+                            <label for="intensitySlider">
+                                Intensity:
+                                <span class="hint" title="Controls vibration strength. Higher values = stronger vibration. Recommended: 1.0-2.0x">ℹ️</span>
+                            </label>
                             <input type="range" id="intensitySlider" min="0.1" max="3.0" step="0.1" value="1.0">
                             <span id="intensityValue">1.0x</span>
                         </div>
                         
                         <div class="setting-group">
-                            <label for="sensitivitySlider">Sensitivity:</label>
+                            <label for="sensitivitySlider">
+                                Sensitivity:
+                                <span class="hint" title="How responsive vibration is to funscript changes. Higher values = more sensitive to small movements. Recommended: 1.0-2.0x">ℹ️</span>
+                            </label>
                             <input type="range" id="sensitivitySlider" min="0.1" max="5.0" step="0.1" value="1.0">
                             <span id="sensitivityValue">1.0x</span>
                         </div>
@@ -86,7 +92,20 @@
                             <label for="enableVibration">
                                 <input type="checkbox" id="enableVibration" checked>
                                 Enable Vibration
+                                <span class="hint" title="Turn vibration on/off. Only works on mobile devices.">ℹ️</span>
                             </label>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="enableFullscreenVibration">
+                                <input type="checkbox" id="enableFullscreenVibration" checked>
+                                Fullscreen Vibration
+                                <span class="hint" title="Keep vibration active when video is in fullscreen mode.">ℹ️</span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <button id="resetSettings" class="reset-btn">🔄 Reset to Defaults</button>
                         </div>
                     </div>
                 </div>

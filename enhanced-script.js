@@ -5,6 +5,19 @@ let funscriptData = null;
 let isPlaying = false;
 let vibrationInterval = null;
 let videoPlayer = null;
+let isFullscreen = false;
+let fullscreenIndicator = null;
+
+// Default settings
+const DEFAULT_SETTINGS = {
+    intensity: 1.0,
+    sensitivity: 1.0,
+    minDuration: 50,
+    maxDuration: 1000,
+    smoothing: true,
+    enabled: true,
+    enableFullscreenVibration: true
+};
 
 // Configuration
 let config = {
@@ -13,7 +26,8 @@ let config = {
     minDuration: 50,
     maxDuration: 1000,
     smoothing: true,
-    enabled: true
+    enabled: true,
+    enableFullscreenVibration: true
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -195,6 +209,11 @@ function startVibrationSync() {
     vibrationInterval = setInterval(() => {
         if (!isPlaying) return;
         
+        // Check if vibration should be active in current state
+        if (isFullscreen && !config.enableFullscreenVibration) {
+            return; // Skip vibration in fullscreen if disabled
+        }
+        
         const currentTime = videoPlayer.currentTime * 1000; // Convert to milliseconds
         processVibrationAtTime(currentTime);
     }, 50); // Check every 50ms for smooth sync
@@ -260,6 +279,8 @@ function setupConfigControls() {
     const sensitivitySlider = document.getElementById('sensitivitySlider');
     const sensitivityValue = document.getElementById('sensitivityValue');
     const enableVibration = document.getElementById('enableVibration');
+    const enableFullscreenVibration = document.getElementById('enableFullscreenVibration');
+    const resetSettings = document.getElementById('resetSettings');
     
     if (intensitySlider && intensityValue) {
         intensitySlider.addEventListener('input', (e) => {
@@ -286,4 +307,143 @@ function setupConfigControls() {
             }
         });
     }
+    
+    if (enableFullscreenVibration) {
+        enableFullscreenVibration.addEventListener('change', (e) => {
+            config.enableFullscreenVibration = e.target.checked;
+            console.log('Fullscreen vibration enabled:', config.enableFullscreenVibration);
+        });
+    }
+    
+    if (resetSettings) {
+        resetSettings.addEventListener('click', () => {
+            resetToDefaults();
+        });
+    }
+    
+    // Setup fullscreen detection
+    setupFullscreenDetection();
+}
+
+function resetToDefaults() {
+    console.log('Resetting to default settings');
+    
+    // Update config
+    config.intensity = DEFAULT_SETTINGS.intensity;
+    config.sensitivity = DEFAULT_SETTINGS.sensitivity;
+    config.enabled = DEFAULT_SETTINGS.enabled;
+    config.enableFullscreenVibration = DEFAULT_SETTINGS.enableFullscreenVibration;
+    
+    // Update UI elements
+    const intensitySlider = document.getElementById('intensitySlider');
+    const intensityValue = document.getElementById('intensityValue');
+    const sensitivitySlider = document.getElementById('sensitivitySlider');
+    const sensitivityValue = document.getElementById('sensitivityValue');
+    const enableVibration = document.getElementById('enableVibration');
+    const enableFullscreenVibration = document.getElementById('enableFullscreenVibration');
+    
+    if (intensitySlider && intensityValue) {
+        intensitySlider.value = DEFAULT_SETTINGS.intensity;
+        intensityValue.textContent = DEFAULT_SETTINGS.intensity.toFixed(1) + 'x';
+    }
+    
+    if (sensitivitySlider && sensitivityValue) {
+        sensitivitySlider.value = DEFAULT_SETTINGS.sensitivity;
+        sensitivityValue.textContent = DEFAULT_SETTINGS.sensitivity.toFixed(1) + 'x';
+    }
+    
+    if (enableVibration) {
+        enableVibration.checked = DEFAULT_SETTINGS.enabled;
+    }
+    
+    if (enableFullscreenVibration) {
+        enableFullscreenVibration.checked = DEFAULT_SETTINGS.enableFullscreenVibration;
+    }
+    
+    // Show confirmation
+    showNotification('Settings reset to defaults! 🔄');
+}
+
+function setupFullscreenDetection() {
+    // Listen for fullscreen changes
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+}
+
+function handleFullscreenChange() {
+    const isCurrentlyFullscreen = !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+    );
+    
+    isFullscreen = isCurrentlyFullscreen;
+    console.log('Fullscreen changed:', isFullscreen);
+    
+    if (isFullscreen && config.enableFullscreenVibration) {
+        showFullscreenIndicator();
+    } else {
+        hideFullscreenIndicator();
+    }
+}
+
+function showFullscreenIndicator() {
+    if (!fullscreenIndicator) {
+        fullscreenIndicator = document.createElement('div');
+        fullscreenIndicator.className = 'fullscreen-vibration-active';
+        fullscreenIndicator.textContent = '📳 Vibration Active';
+        document.body.appendChild(fullscreenIndicator);
+    }
+}
+
+function hideFullscreenIndicator() {
+    if (fullscreenIndicator) {
+        fullscreenIndicator.remove();
+        fullscreenIndicator = null;
+    }
+}
+
+function showNotification(message) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        z-index: 10000;
+        animation: fadeInOut 3s ease-in-out forwards;
+    `;
+    notification.textContent = message;
+    
+    // Add animation keyframes if not already added
+    if (!document.getElementById('notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+                10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Remove after animation
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
 }
