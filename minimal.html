@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Test</title>
+</head>
+<body>
+    <h1>Minimal Test</h1>
+    <div id="test" style="display: none;">This should become visible</div>
+    
+    <script>
+        console.log('Script executing');
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            const testDiv = document.getElementById('test');
+            if (testDiv) {
+                testDiv.style.display = 'block';
+                testDiv.innerHTML = 'JavaScript is working!';
+            }
+        });
+    </script>
+</body>
+</html>
