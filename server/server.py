@@ -5,7 +5,7 @@ import os
 
 class CustomHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory='public', **kwargs)
+        super().__init__(*args, directory='.', **kwargs)
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
