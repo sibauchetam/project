@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const enableVibration = document.getElementById('enableVibration');
     const enableFullscreenVibration = document.getElementById('enableFullscreenVibration');
     const resetSettingsBtn = document.getElementById('resetSettings');
+    const vibrationVisualizer = document.getElementById('vibration-visualizer');
 
     // Default settings
     const DEFAULT_SETTINGS = {
@@ -131,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const stopVibration = () => {
         if (vibrationInterval) clearInterval(vibrationInterval);
         if (navigator.vibrate) navigator.vibrate(0);
+        updateVisualizer(0);
     };
 
     const processVibration = (currentTime) => {
@@ -139,6 +141,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const intensity = (action.pos / 100) * config.intensity * config.sensitivity;
             const duration = Math.min(100, Math.max(20, intensity * 10));
             if (navigator.vibrate) navigator.vibrate(duration);
+            updateVisualizer(intensity);
+        } else {
+            updateVisualizer(0);
+        }
+    };
+
+    const updateVisualizer = (intensity) => {
+        if (vibrationVisualizer) {
+            const cappedIntensity = Math.min(intensity, 1);
+            vibrationVisualizer.style.backgroundColor = `rgba(252, 92, 125, ${cappedIntensity * 0.5})`;
+            vibrationVisualizer.style.boxShadow = `0 0 ${cappedIntensity * 30}px rgba(252, 92, 125, ${cappedIntensity * 0.7})`;
+
+            setTimeout(() => {
+                vibrationVisualizer.style.backgroundColor = 'rgba(255, 255, 255, 0)';
+                vibrationVisualizer.style.boxShadow = '0 0 20px rgba(252, 92, 125, 0)';
+            }, 100);
         }
     };
 
