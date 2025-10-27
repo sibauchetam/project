@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funscript Vibration Player</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Funscript Vibration Player</h1>
+            <p>Experience synchronized vibrations by uploading a video and a .funscript file.</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <div class="upload-area" id="videoUpload">
+                    <div class="upload-content">
+                        <div class="upload-icon"></div>
+                        <h3>Upload Video</h3>
+                        <p>Drop a video file or click to select</p>
+                        <input type="file" id="videoInput" accept="video/*" hidden>
+                    </div>
+                </div>
+
+                <div class="upload-area" id="funscriptUpload">
+                    <div class="upload-content">
+                        <div class="upload-icon"></div>
+                        <h3>Upload Funscript</h3>
+                        <p>Drop a .funscript file or click to select</p>
+                        <input type="file" id="funscriptInput" accept=".funscript,.json" hidden>
+                    </div>
+                </div>
+            </div>
+
+            <section class="status-section">
+                <div class="status-item" id="videoStatus">
+                    <span class="status-label">Video</span>
+                    <span class="status-value">Not loaded</span>
+                </div>
+                <div class="status-item" id="funscriptStatus">
+                    <span class="status-label">Funscript</span>
+                    <span class="status-value">Not loaded</span>
+                </div>
+                <div class="status-item" id="vibrationStatus">
+                    <span class="status-label">Vibration</span>
+                    <span class="status-value"></span>
+                </div>
+            </section>
+
+            <section class="player-section" id="playerSection">
+                <div class="video-container">
+                    <video id="videoPlayer" controls></video>
+                </div>
+
+                <div class="controls">
+                    <button id="playPauseBtn" class="control-btn">Play</button>
+                    <button id="stopBtn" class="control-btn">Stop</button>
+                    <button id="testVibrationBtn" class="control-btn">Test Vibration</button>
+                </div>
+
+                <div class="vibration-settings">
+                    <h4>Vibration Settings</h4>
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <label for="intensitySlider">Intensity</label>
+                            <div class="slider-container">
+                                <input type="range" id="intensitySlider" min="0.1" max="3.0" step="0.1" value="1.0">
+                                <span id="intensityValue">1.0x</span>
+                            </div>
+                            <div class="hint" data-tooltip="Controls the overall strength of vibrations. Higher values produce stronger feedback."></div>
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="sensitivitySlider">Sensitivity</label>
+                            <div class="slider-container">
+                                <input type="range" id="sensitivitySlider" min="0.1" max="5.0" step="0.1" value="1.0">
+                                <span id="sensitivityValue">1.0x</span>
+                            </div>
+                            <div class="hint" data-tooltip="Adjusts responsiveness to Funscript movements. Higher values are more sensitive to subtle changes."></div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-settings">
+                        <div class="setting-group-checkbox">
+                            <input type="checkbox" id="enableVibration" checked>
+                            <label for="enableVibration">Enable Vibration</label>
+                            <div class="hint" data-tooltip="Globally enables or disables vibration feedback."></div>
+                        </div>
+                        <div class="setting-group-checkbox">
+                            <input type="checkbox" id="enableFullscreenVibration" checked>
+                            <label for="enableFullscreenVibration">Fullscreen Vibration</label>
+                            <div class="hint" data-tooltip="Allows vibration to continue when the video is in fullscreen mode."></div>
+                        </div>
+                    </div>
+
+                    <button id="resetSettings" class="reset-btn">Reset to Defaults</button>
+                </div>
+            </section>
+
+            <section class="instructions">
+                <h3>How to Use</h3>
+                <ol>
+                    <li><strong>Upload Files:</strong> Add a video and its corresponding .funscript file.</li>
+                    <li><strong>Adjust Settings:</strong> Fine-tune the vibration intensity and sensitivity.</li>
+                    <li><strong>Play:</strong> Press the play button to start the synchronized experience.</li>
+                    <li><strong>Test Vibration:</strong> Use the test button to check if your device supports vibration.</li>
+                </ol>
+            </section>
+        </main>
+
+        <footer>
+            <p>Funscript Vibration Player | <a href="https://github.com/your-repo" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+    <div id="tooltip" class="tooltip" style="display:none;"></div>
+    <script src="enhanced-script.js"></script>
+</body>
+</html>
